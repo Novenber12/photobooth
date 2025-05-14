@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Permissions-Policy" content="camera=*, microphone=*">
+  <title>Creative Photo Booth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="app-header">
+      <h1 class="app-title">Creative Photo Booth</h1>
+      <p class="app-subtitle">Capture moments, create memories</p>
+      <button class="theme-toggle" id="theme-toggle">🌙</button>
+    </div>
+
+    <div class="tab-container">
+      <div class="tabs">
+        <button class="tab active" data-tab="capture">📸 Capture</button>
+        <button class="tab" data-tab="upload">📤 Upload</button>
+        <button class="tab" data-tab="editor">✨ Editor</button>
+        <button class="tab" data-tab="collage">🖼️ Collage</button>
+        <button class="tab" data-tab="gallery">📁 Gallery</button>
+      </div>
+    </div>
+
+    <!-- Capture Section -->
+    <div class="section active" id="capture-section">
+      <div class="card camera-section">
+        <div class="camera-controls">
+          <button id="capture-btn" class="btn btn-primary">
+            <span class="btn-icon">📸</span> Take Photo
+          </button>
+          <button id="auto-capture-btn" class="btn btn-accent">
+            <span class="btn-icon">🎬</span> Auto Capture (4)
+          </button>
+          <button id="toggle-camera-btn" class="btn btn-outline">
+            <span class="btn-icon">📷</span> Switch Camera
+          </button>
+          <button id="toggle-flash-btn" class="btn btn-outline">
+            <span class="btn-icon">⚡</span> Flash
+          </button>
+          <button id="effects-btn" class="btn btn-outline">
+            <span class="btn-icon">🎭</span> Effects
+          </button>
+        </div>
+        <div class="video-container">
+          <video id="video" autoplay playsinline></video>
+          <div id="countdown"></div>
+          <div class="flash" id="flash"></div>
+        </div>
+        <div class="photos-grid" id="photos">
+          <div class="photo-slot" id="slot-1">
+            <div class="placeholder">1</div>
+          </div>
+          <div class="photo-slot" id="slot-2">
+            <div class="placeholder">2</div>
+          </div>
+          <div class="photo-slot" id="slot-3">
+            <div class="placeholder">3</div>
+          </div>
+          <div class="photo-slot" id="slot-4">
+            <div class="placeholder">4</div>
+          </div>
+        </div>
+        <div class="error-message" id="error-message"></div>
+        <div class="action-buttons">
+          <button id="retake-photos-btn" class="btn btn-outline" disabled>
+            <span class="btn-icon">🔄</span> Retake
+          </button>
+          <button id="continue-to-editor-btn" class="btn btn-primary" disabled>
+            <span class="btn-icon">✨</span> Continue to Editor
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="section" id="upload-section">
+      <div class="card upload-section">
+        <h2>Upload your photos</h2>
+        <p>Choose images from your device to create a photo strip</p>
+        <div class="upload-grid">
+          <div class="upload-slot" id="upload-slot-1">
+            <input type="file" id="upload-1" accept="image/*" />
+            <div class="upload-icon">+</div>
+          </div>
+          <div class="upload-slot" id="upload-slot-2">
+            <input type="file" id="upload-2" accept="image/*" />
+            <div class="upload-icon">+</div>
+          </div>
+          <div class="upload-slot" id="upload-slot-3">
+            <input type="file" id="upload-3" accept="image/*" />
+            <div class="upload-icon">+</div>
+          </div>
+          <div class="upload-slot" id="upload-slot-4">
+            <input type="file" id="upload-4" accept="image/*" />
+            <div class="upload-icon">+</div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button id="clear-uploads-btn" class="btn btn-outline">
+            <span class="btn-icon">🗑️</span> Clear All
+          </button>
+          <button id="submit-uploads-btn" class="btn btn-primary" disabled>
+            <span class="btn-icon">✨</span> Continue to Editor
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor Section -->
+    <div class="section" id="editor-section">
+      <div class="card">
+        <div class="editor-container">
+          <div class="photostrip-container">
+            <div class="photostrip" id="photostrip">
+              <div class="photostrip-img-container" data-index="0">
+                <img id="photo-1" src="/placeholder.svg?height=250&width=250" alt="Photo 1" class="editable-image" />
+                <div class="image-selector">Click to Edit</div>
+              </div>
+              <div class="photostrip-img-container" data-index="1">
+                <img id="photo-2" src="/placeholder.svg?height=250&width=250" alt="Photo 2" class="editable-image" />
+                <div class="image-selector">Click to Edit</div>
+              </div>
+              <div class="photostrip-img-container" data-index="2">
+                <img id="photo-3" src="/placeholder.svg?height=250&width=250" alt="Photo 3" class="editable-image" />
+                <div class="image-selector">Click to Edit</div>
+              </div>
+              <div class="photostrip-img-container" data-index="3">
+                <img id="photo-4" src="/placeholder.svg?height=250&width=250" alt="Photo 4" class="editable-image" />
+                <div class="image-selector">Click to Edit</div>
+              </div>
+              <div class="date" id="date-stamp">May 14, 2025</div>
+            </div>
+            <div id="selected-image-info">No image selected</div>
+          </div>
+          <div class="controls">
+            <div class="control-section">
+              <h3>Stickers</h3>
+              <div class="stickers-grid">
+                <button class="sticker-btn" data-sticker="🦄">🦄</button>
+                <button class="sticker-btn" data-sticker="🐾">🐾</button>
+                <button class="sticker-btn" data-sticker="🐼">🐼</button>
+                <button class="sticker-btn" data-sticker="✨">✨</button>
+                <button class="sticker-btn" data-sticker="💖">💖</button>
+                <button class="sticker-btn" data-sticker="🌈">🌈</button>
+                <button class="sticker-btn" data-sticker="🎉">🎉</button>
+                <button class="sticker-btn" data-sticker="🌟">🌟</button>
+                <button class="sticker-btn" data-sticker="🍕">🍕</button>
+                <button class="sticker-btn" data-sticker="🎸">🎸</button>
+              </div>
+            </div>
+            <div class="control-section">
+              <h3>Frames</h3>
+              <div class="frames-grid">
+                <button class="frame-btn" data-frame="classic">
+                  <div style="width: 100%; height: 100%; border: 3px solid #ff6b6b;"></div>
+                </button>
+                <button class="frame-btn" data-frame="polaroid">
+                  <div style="width: 100%; height: 100%; border: 8px solid white; border-bottom: 20px solid white;"></div>
+                </button>
+                <button class="frame-btn" data-frame="vintage">
+                  <div style="width: 100%; height: 100%; border: 5px solid #d4a373;"></div>
+                </button>
+                <button class="frame-btn" data-frame="modern">
+                  <div style="width: 100%; height: 100%; border: 2px solid black;"></div>
+                </button>
+                <button class="frame-btn" data-frame="none">
+                  <div style="width: 100%; height: 100%; border: 1px dashed #ccc;"></div>
+                </button>
+              </div>
+            </div>
+            <div class="control-section">
+              <h3>Background</h3>
+              <div class="backgrounds-grid">
+                <button class="bg-btn" style="background-color: #ffffff;" data-bg="#ffffff"></button>
+                <button class="bg-btn" style="background-color: #000000;" data-bg="#000000"></button>
+                <button class="bg-btn" style="background-color: #ff6b6b;" data-bg="#ff6b6b"></button>
+                <button class="bg-btn" style="background-color: #4ecdc4;" data-bg="#4ecdc4"></button>
+                <button class="bg-btn" style="background-color: #ffd166;" data-bg="#ffd166"></button>
+                <button class="bg-btn" style="background-color: #f9f9f9;" data-bg="#f9f9f9"></button>
+                <button class="bg-btn" style="background-color: #f4a261;" data-bg="#f4a261"></button>
+                <button class="bg-btn" style="background-color: #e76f51;" data-bg="#e76f51"></button>
+                <button class="bg-btn" style="background-color: #2a9d8f;" data-bg="#2a9d8f"></button>
+                <button class="bg-btn" style="background-color: #264653;" data-bg="#264653"></button>
+              </div>
+            </div>
+            <div class="control-section">
+              <h3>Filters</h3>
+              <div class="filters-grid">
+                <button class="filter-btn active" data-filter="none">Normal</button>
+                <button class="filter-btn" data-filter="grayscale(100%)">B&W</button>
+                <button class="filter-btn" data-filter="sepia(100%)">Sepia</button>
+                <button class="filter-btn" data-filter="saturate(200%)">Vibrant</button>
+                <button class="filter-btn" data-filter="hue-rotate(90deg)">Cool</button>
+                <button class="filter-btn" data-filter="hue-rotate(-90deg)">Warm</button>
+                <button class="filter-btn" data-filter="contrast(150%)">Contrast</button>
+                <button class="filter-btn" data-filter="brightness(150%)">Bright</button>
+                <button class="filter-btn" data-filter="blur(2px)">Blur</button>
+              </div>
+            </div>
+            <div class="control-section">
+              <h3>Text</h3>
+              <div class="text-input-container">
+                <input type="text" id="custom-text" class="text-input" placeholder="Add custom text..." />
+              </div>
+              <div class="text-input-container">
+                <input type="color" id="text-color" class="color-picker" value="#ff6b6b" />
+              </div>
+              <button id="add-text-btn" class="btn btn-outline">
+                <span class="btn-icon">✏️</span> Add Text
+              </button>
+            </div>
+            <div class="control-section">
+              <div class="toggle-container">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="enable-date" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">Show Date</span>
+              </div>
+              <div class="toggle-container">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="enable-animation">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">Animation Effect</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button id="preview-btn" class="btn btn-secondary">
+                <span class="btn-icon">👁️</span> Preview
+              </button>
+              <button id="save-to-gallery-btn" class="btn btn-accent">
+                <span class="btn-icon">💾</span> Save to Gallery
+              </button>
+              <button id="download-btn" class="btn btn-primary">
+                <span class="btn-icon">⬇️</span> Download
+              </button>
+              <button id="share-btn" class="btn btn-outline">
+                <span class="btn-icon">📤</span> Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collage Section -->
+    <div class="section" id="collage-section">
+      <div class="card">
+        <h2>Create a Collage</h2>
+        <div class="collage-grid" id="collage-grid">
+          <div class="collage-item empty" data-index="0">+</div>
+          <div class="collage-item empty" data-index="1">+</div>
+          <div class="collage-item empty" data-index="2">+</div>
+          <div class="collage-item empty" data-index="3">+</div>
+        </div>
+        <div class="collage-controls">
+          <button class="collage-layout-btn layout-2x2 active" data-layout="2x2">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+          </button>
+          <button class="collage-layout-btn layout-1x2" data-layout="1x2">
+            <div class="cell"></div>
+            <div class="cell"></div>
+          </button>
+          <button class="collage-layout-btn layout-2x1" data-layout="2x1">
+            <div class="cell"></div>
+            <div class="cell"></div>
+          </button>
+          <button class="collage-layout-btn layout-1-2" data-layout="1-2">
+            <div class="cell" style="grid-row: span 2;"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+          </button>
+          <button class="collage-layout-btn layout-2-1" data-layout="2-1">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell" style="grid-column: span 2;"></div>
+          </button>
+        </div>
+        <div class="action-buttons">
+          <button id="clear-collage-btn" class="btn btn-outline">
+            <span class="btn-icon">🗑️</span> Clear
+          </button>
+          <button id="download-collage-btn" class="btn btn-primary" disabled>
+            <span class="btn-icon">⬇️</span> Download Collage
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="section" id="gallery-section">
+      <div class="card">
+        <div class="gallery-header">
+          <h2>Your Gallery</h2>
+          <div class="gallery-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="recent">Recent</button>
+            <button class="filter-btn" data-filter="favorites">Favorites</button>
+          </div>
+        </div>
+        
+        <div class="gallery-container">
+          <div class="gallery" id="gallery">
+            <!-- Gallery items will be added here dynamically -->
+            <div class="gallery-item">
+              <div class="gallery-item-inner">
+                <div class="gallery-item-image">
+                  <img src="/placeholder.svg?height=300&width=200" alt="Saved photo strip">
+                  <div class="gallery-item-overlay">
+                    <button class="action-btn preview-btn">👁️</button>
+                    <button class="action-btn download-btn">⬇️</button>
+                    <button class="action-btn favorite-btn">❤️</button>
+                    <button class="action-btn delete-btn">🗑️</button>
+                  </div>
+                </div>
+                <div class="gallery-item-info">
+                  <div class="info-main">
+                    <h3 class="title">Photo Strip #1</h3>
+                    <span class="date">May 14, 2025</span>
+                  </div>
+                  <div class="info-stats">
+                    <span class="views">👁️ 24</span>
+                    <span class="likes">❤️ 12</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="empty-gallery-message" class="empty-gallery" style="display: none;">
+          <div class="empty-gallery-content">
+            <div class="empty-icon">📸</div>
+            <h3>Your Gallery is Empty</h3>
+            <p>Create beautiful photo strips and they will appear here!</p>
+            <button id="create-new-btn" class="btn btn-primary">
+              <span class="btn-icon">📸</span> Create Your First Strip
+            </button>
+          </div>
+        </div>
+
+        <div class="gallery-pagination">
+          <button class="pagination-btn" disabled>Previous</button>
+          <span class="page-info">Page 1 of 1</span>
+          <button class="pagination-btn" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="preview-modal">
+      <div class="modal-content">
+        <button class="modal-close" id="close-preview-modal">×</button>
+        <div class="modal-title">Preview</div>
+        <div class="modal-body">
+          <div class="scrapbook" style="min-height: 400px; width: 100%;">
+            <div class="photostrip scrapbook-item" style="left: 20px; top: 20px;">
+              <div class="photostrip-img-container">
+                <img id="preview-photo-1" src="/placeholder.svg?height=150&width=150" alt="Photo 1" style="width: 150px; height: 150px;" />
+              </div>
+              <div class="photostrip-img-container">
+                <img id="preview-photo-2" src="/placeholder.svg?height=150&width=150" alt="Photo 2" style="width: 150px; height: 150px;" />
+              </div>
+              <div class="photostrip-img-container">
+                <img id="preview-photo-3" src="/placeholder.svg?height=150&width=150" alt="Photo 3" style="width: 150px; height: 150px;" />
+              </div>
+              <div class="photostrip-img-container">
+                <img id="preview-photo-4" src="/placeholder.svg?height=150&width=150" alt="Photo 4" style="width: 150px; height: 150px;" />
+              </div>
+              <div class="date">May 14, 2025</div>
+            </div>
+            <div class="decor scrapbook-item" style="left: 50px; top: 50px;">🌸</div>
+            <div class="decor scrapbook-item" style="right: 50px; top: 50px;">💖</div>
+            <div class="decor scrapbook-item" style="left: 200px; top: 200px;">🌟</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="close-preview-btn" class="btn btn-outline">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="share-modal">
+      <div class="modal-content">
+        <button class="modal-close" id="close-share-modal">×</button>
+        <div class="modal-title">Share Your Creation</div>
+        <div class="modal-body">
+          <div class="share-options">
+            <div class="share-btn share-facebook">📘</div>
+            <div class="share-btn share-twitter">🐦</div>
+            <div class="share-btn share-instagram">📷</div>
+            <div class="share-btn share-download">⬇️</div>
+          </div>
+          <div style="margin-top: 20px;">
+            <input type="text" class="text-input" value="https://share.photobooth.app/s/abc123" readonly />
+            <button id="copy-link-btn" class="btn btn-outline" style="margin-top: 10px; width: 100%;">
+              <span class="btn-icon">📋</span> Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery Preview Modal -->
+    <div class="modal" id="gallery-preview-modal">
+      <div class="modal-content preview-modal-content">
+        <button class="modal-close" id="close-gallery-preview">×</button>
+        <div class="modal-title">Preview</div>
+        
+        <div class="preview-container">
+          <div class="photostrip-preview">
+            <div class="photostrip-preview-inner">
+              <div class="photostrip-img">
+                <img src="/placeholder.svg?height=250&width=250" alt="Photo 1" />
+              </div>
+              <div class="photostrip-img">
+                <img src="/placeholder.svg?height=250&width=250" alt="Photo 2" />
+              </div>
+              <div class="photostrip-img">
+                <img src="/placeholder.svg?height=250&width=250" alt="Photo 3" />
+              </div>
+              <div class="photostrip-img">
+                <img src="/placeholder.svg?height=250&width=250" alt="Photo 4" />
+              </div>
+              <div class="date-stamp">May 14, 2025</div>
+            </div>
+            
+            <div class="preview-decorations">
+              <div class="preview-sticker" style="top: 50px; right: 30px;">❤️</div>
+              <div class="preview-sticker" style="top: 150px; right: 80px;">✨</div>
+              <div class="preview-sticker" style="top: 300px; right: 40px;">🌈</div>
+            </div>
+          </div>
+          
+          <div class="preview-details">
+            <div class="preview-details-inner">
+              <h3>Photo Strip #1</h3>
+              <div class="preview-info-row">
+                <span class="preview-label">Created on:</span>
+                <span class="preview-value">May 14, 2025</span>
+              </div>
+              
+              <div class="preview-stats">
+                <div class="stat-item">
+                  <span class="stat-icon">👁️</span>
+                  <span class="stat-value">24</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-icon">❤️</span>
+                  <span class="stat-value">12</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-icon">💾</span>
+                  <span class="stat-value">5</span>
+                </div>
+              </div>
+              
+              <div class="preview-actions">
+                <button class="preview-action-btn download-btn">
+                  <span class="btn-icon">⬇️</span>
+                  Download
+                </button>
+                <button class="preview-action-btn share-btn">
+                  <span class="btn-icon">📤</span>
+                  Share
+                </button>
+                <button class="preview-action-btn delete-btn">
+                  <span class="btn-icon">🗑️</span>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-container" id="loading-container">
+      <div class="loading"></div>
+    </div>
+  </div>
+
+  <!-- Alert Container -->
+  <div class="alert-container" id="alert-container">
+    <!-- Alerts will be dynamically added here -->
+    <!-- Example alerts: 
+    <div class="alert alert-success">
+      <div class="alert-icon">✅</div>
+      <div class="alert-content">
+        <div class="alert-title">Success!</div>
+        <div class="alert-message">Your photo has been saved successfully.</div>
+      </div>
+      <button class="alert-close">×</button>
+    </div>
+    -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>About Us</h4>
+        <p>Creative Photo Booth helps you capture and create beautiful memories with friends and family.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#capture-section">Capture</a></li>
+          <li><a href="#editor-section">Editor</a></li>
+          <li><a href="#collage-section">Collage</a></li>
+          <li><a href="#gallery-section">Gallery</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect With Us</h4>
+        <div class="social-links">
+          <a href="#" title="Facebook">📘</a>
+          <a href="#" title="Twitter">🐦</a>
+          <a href="#" title="Instagram">📷</a>
+          <a href="#" title="YouTube">📺</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>📧 nguyengiakhang.contact@gmail.com</p>
+        <p>📞 0984 020 546</p>
+        <p>📍 Tây Ninh, Vietnam</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Creative Photo Booth. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Script tags -->
+  <script>
+    // Simple test to confirm script is running
+    console.log('Base script loaded');
+    
+    // Test alert system
+    window.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded');
+      
+      // Create a test alert
+      setTimeout(function() {
+        if (typeof showAlert === 'function') {
+          showAlert('JavaScript successfully loaded!', 'success');
+        } else {
+          console.error('Alert function not found - main script may not be loaded');
+          
+          // Create manual alert if main script failed
+          const alertContainer = document.getElementById('alert-container');
+          if (alertContainer) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-error';
+            alert.innerHTML = `
+              <div class="alert-icon">❌</div>
+              <div class="alert-content">
+                <div class="alert-title">Error!</div>
+                <div class="alert-message">JavaScript file could not be loaded properly. Check console for details.</div>
+              </div>
+              <button class="alert-close">×</button>
+            `;
+            
+            // Add close functionality
+            alert.querySelector('.alert-close').addEventListener('click', () => {
+              alert.style.opacity = '0';
+              setTimeout(() => {
+                alertContainer.removeChild(alert);
+              }, 300);
+            });
+            
+            alertContainer.appendChild(alert);
+          }
+        }
+      }, 1000);
+    });
+  </script>
+  <script src="./script.js"></script>
+</body>
+</html>
